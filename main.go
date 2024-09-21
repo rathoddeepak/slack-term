@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 
-	"github.com/OpenPeeDeeP/xdg"
 	"github.com/erroneousboat/termui"
 	termbox "github.com/nsf/termbox-go"
 
@@ -40,19 +40,25 @@ var (
 	flgConfig string
 	flgToken  string
 	flgDebug  bool
-	flgUsage  bool
+	// flgUsage  bool
 )
 
 func init() {
 
-	// Find the default config file
-	configFile := xdg.New("slack-term", "").QueryConfig("config")
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		fmt.Println("Error getting home directory:", err)
+		return
+	}
+
+	// Construct the path to the config file
+	configPath := filepath.Join(homeDir, ".config", "slack-term", "config")
 
 	// Parse flags
 	flag.StringVar(
 		&flgConfig,
 		"config",
-		configFile,
+		configPath,
 		"location of config file",
 	)
 
